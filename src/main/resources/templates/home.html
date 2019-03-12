@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Education</title>
+
+    <link rel="icon" th:href="@{/images/main/icon.png}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/home-style.css}"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+    <script>
+        $(function () {
+            addRow();
+            $('#content').scroll(function () {
+                var position = $('#content').scrollTop();
+                var lastRowPosition = $('#content_table tr:last').offset().top;
+                var height = $(window).height();
+                if (lastRowPosition < height) {
+                    addRow();
+                }
+            });
+        });
+
+        function addRow() {
+            console.log(html);
+            for (var i = 0; i < 3; i++) {
+                var html = $('#news_table_template').clone();
+                $('#content_table').append(html);
+            }
+        }
+
+        function removeRow() {
+            $('#content_table tr:last').remove();
+        }
+
+        $(function () {
+            $('.inner').hide();
+            $('.outer').hover(
+                function () {
+                    $(this).find('img').width('8vh')
+                    $(this).find('img').height('8vh')
+                    $(this).find('div').slideDown("fast");
+                }, function () {
+                    $(this).find('img').width('6vh')
+                    $(this).find('img').height('6vh')
+                    $(this).find('div').hide();
+                });
+
+            $('#user_icon').hover(
+                function () {
+                    $(this).find('div').slideDown();
+                },
+                function () {
+                    $(this).find('div').slideUp('fast');
+                }
+            );
+        });//выползайки
+
+    </script>
+
+</head>
+
+<body>
+<header>
+    <div id="education_header_container">
+        <img id="icon" th:src="@{/images/main/icon.png}" alt="logo">
+        <b id="emblem">Education</b>
+        <input id="search_input" type="text">
+        <button id="search_button" type="button"><img id="search_icon" th:src="@{/images/main/search.png}"></button>
+        <b id="user_name"><a href="/" th:text="${user.name +' '+user.secondName}"></a></b>
+        <div id="user_icon">
+            <img src="user-3.png" class="outer" alt="icon">
+            <div id="user_setting_menu" class='inner'>
+                <a href="#">Scheduler </a><br>
+                <a href="#">Events </a><br>
+                <a href="#">Setting </a><br>
+                <a th:href="@{/logout}">Exit </a><br>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div id="main_menu">
+    <table>
+        <tr>
+            <td><a href="#"><img src="home.png" alt="home"> Main page</a></td>
+            <td><a href="#"><img src="message.png" alt="message"> Messages</a></td>
+            <td><a href="#"><img src="notifications.png" alt="not"> Notifications</a></td>
+            <td><a href="#"><img src="friends.png" alt="friends"> Friends</a></td>
+            <td><a href="#"><img src="more.png" alt="more"> More</a></td>
+        </tr>
+    </table>
+</div>
+
+<div id="content">
+    <table id="content_table" >
+        <tr id="news_table_template">
+            <td class="news_block">
+                <div class="news_image_container">
+                    <img class="news_image" src="training_1.jpeg" alt="image">
+                </div>
+                <div class="news_details">
+                    <div class="news_name">Some Training Name and main details</div>
+                    <div class="news_details_table_container">
+                        <table>
+                            <tr>
+                                <td class="news_details_icons_block"><img class="news_details_icons" src="view.png"> 25
+                                </td>
+                                <td class="news_details_icons_block"><img class="news_details_icons" src="comment.png">
+                                    25
+                                </td>
+                                <td class="news_details_icons_block"><img class="news_details_icons" src="like.png">155
+                                </td>
+                                <td class="news_details_icons_block"><img class="news_details_icons" src="next.png">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </td>
+            <td class="news_block">
+                <div class="news_image_container">
+                    <img class="news_image" src="teacher_1.jpg" alt="image">
+                </div>
+                <div class="news_details">
+                    <div class="news_name">Teacher Name and main details</div>
+                    <div class="news_details_table_container">
+                        <table>
+                            <tr>
+                                <td class="news_details_icons_block"><img class="news_details_icons" src="view.png"> 25
+                                </td>
+                                <td class="news_details_icons_block"><img class="news_details_icons" src="comment.png">
+                                    25
+                                </td>
+                                <td class="news_details_icons_block"><img class="news_details_icons" src="like.png">155
+                                </td>
+                                <td class="news_details_icons_block"><img class="news_details_icons" src="next.png">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </td>
+            <td class="news_block">
+                <div class="news_image_container">
+                    <img class="news_image" src="seminar_1.jpg" alt="image">
+                </div>
+                <div class="news_details">
+                    <div class="news_name">Seminar Name and main details</div>
+                    <div class="news_details_table_container">
+                        <table>
+                            <tr>
+                                <td class="news_details_icons_block"><img class="news_details_icons" src="view.png"> 25
+                                </td>
+                                <td class="news_details_icons_block"><img class="news_details_icons" src="comment.png">
+                                    25
+                                </td>
+                                <td class="news_details_icons_block"><img class="news_details_icons" src="like.png">155
+                                </td>
+                                <td class="news_details_icons_block"><img class="news_details_icons" src="next.png">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </td>
+            <td class="news_block">
+                <div class="news_image_container">
+                    <img class="news_image" src="teacher_2.png" alt="image">
+                </div>
+                <div class="news_details">
+                    <div class="news_name">Teacher Name and main details</div>
+                    <div class="news_details_table_container">
+                        <table>
+                            <tr>
+                                <td class="news_details_icons_block"><img class="news_details_icons" src="view.png"> 25
+                                </td>
+                                <td class="news_details_icons_block"><img class="news_details_icons" src="comment.png">
+                                    25
+                                </td>
+                                <td class="news_details_icons_block"><img class="news_details_icons" src="like.png">155
+                                </td>
+                                <td class="news_details_icons_block"><img class="news_details_icons" src="next.png">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div id="sections">
+    <div class='outer' id="section_template">
+        <img src="icon.png" alt="image">
+        <div class='inner'>
+            <h2>First group template</h2>
+            <ul>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+            </ul>
+            <h2>Second group template</h2>
+            <ul>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+            </ul>
+            <h2>Third group template</h2>
+            <ul>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+                <li><a href="/">Lesson type</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class='outer'>
+        <img src="language.png" alt="image">
+        <div class='inner'>
+            <h2>Language</h2>
+            <ul>
+                <li><a href="#">English</a></li>
+                <li><a href="#">Spanish</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class='outer'>
+        <img src="health.png" alt="image">
+        <div class='inner'>
+            <h2>Health group</h2>
+            <ul>
+                <li><a href="#">Fitness</a></li>
+                <li><a href="#">Diet</a></li>
+                <li><a href="#">Healthy breathing</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class='outer'>
+        <img src="beauty.png" alt="image">
+        <div class='inner'>
+            <h2>Beauty </h2>
+            <ul>
+                <li><a href="#">Face fitness</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class='outer'>
+        <img src="esoteric.png" alt="image">
+        <div class='inner'>
+            <h2>Esoteric group</h2>
+            <ul>
+                <li><a href="#">Yoga</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class='outer'>
+        <img src="sport.png" alt="image">
+        <div class='inner'>
+            <h2>Sport</h2>
+            <ul>
+                <li><a href="#">Chess</a></li>
+                <li><a href="#">Poker</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class='outer'>
+        <img src="education.png" alt="image">
+        <div class='inner'>
+            <h2>Education</h2>
+            <ul>
+                <li><a href="#">Mathematics</a></li>
+                <li><a href="#">Literature</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class='outer'>
+        <img src="art.png" alt="image">
+        <div class='inner'>
+            <h2>Art</h2>
+            <ul>
+                <li><a href="#">Music</a></li>
+                <li><a href="#">Drawing</a></li>
+                <li><a href="#">Sculpture</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class='outer'>
+        <img src="profession.png" alt="image">
+        <div class='inner'>
+            <h2>Profession</h2>
+            <ul>
+                <li><a href="#">Designer</a></li>
+                <li><a href="#">Sales</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class='outer'>
+        <img src="other.png" alt="image">
+        <div class='inner'>
+            <h2>Other</h2>
+            <ul>
+                <li><a href="#">Mathematics</a></li>
+                <li><a href="#">Literature</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class='outer'>
+        <img src="add_section.png" alt="image">
+        <div class='inner'>
+            <h2>Add new Section</h2>
+            <ul>
+                <li><a href="#">Chess</a></li>
+                <li><a href="#">Poker</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div id="chat">
+    <div id="chat_user_template" class="outer">
+        <div class="inner">
+            <table>
+                <tr>
+                    <td colspan="2"><img src="user-3.png" alt="user"></td>
+                    <td colspan="4">User Name
+                        <hr/>
+                        Teacher
+                    </td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>4</td>
+                    <td>5</td>
+                    <td>6</td>
+                </tr>
+            </table>
+        </div>
+        <img src="user-3.png">
+    </div>
+    <div class="outer">
+        <div class="inner">
+            <table>
+                <tr>
+                    <td colspan="2"><img src="user-3.png" alt="user"></td>
+                    <td colspan="4">User Name
+                        <hr/>
+                        Teacher
+                    </td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>4</td>
+                    <td>5</td>
+                    <td>6</td>
+                </tr>
+            </table>
+        </div>
+        <img src="user-3.png">
+    </div>
+    <div class="outer">
+        <div class="inner">
+            <table>
+                <tr>
+                    <td colspan="2"><img src="user-3.png" alt="user"></td>
+                    <td colspan="4">User Name
+                        <hr/>
+                        Teacher
+                    </td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>4</td>
+                    <td>5</td>
+                    <td>6</td>
+                </tr>
+            </table>
+        </div>
+        <img src="user-3.png">
+    </div>
+    <div class="outer">
+        <div class="inner">
+            <table>
+                <tr>
+                    <td colspan="2"><img src="user-3.png" alt="user"></td>
+                    <td colspan="4">User Name
+                        <hr/>
+                        Teacher
+                    </td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>4</td>
+                    <td>5</td>
+                    <td>6</td>
+                </tr>
+            </table>
+        </div>
+        <img src="user-3.png">
+    </div>
+    <div class="outer">
+        <div class="inner">
+            <table>
+                <tr>
+                    <td colspan="2"><img src="user-3.png" alt="user"></td>
+                    <td colspan="4">User Name
+                        <hr/>
+                        Teacher
+                    </td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>4</td>
+                    <td>5</td>
+                    <td>6</td>
+                </tr>
+            </table>
+        </div>
+        <img src="user-3.png">
+    </div>
+    <div class="outer">
+        <div class="inner">
+            <table>
+                <tr>
+                    <td colspan="2"><img src="user-3.png" alt="user"></td>
+                    <td colspan="4">User Name
+                        <hr/>
+                        Teacher
+                    </td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>4</td>
+                    <td>5</td>
+                    <td>6</td>
+                </tr>
+            </table>
+        </div>
+        <img src="user-3.png">
+    </div>
+    <div class="outer">
+        <div class="inner">
+            <table>
+                <tr>
+                    <td colspan="2"><img src="user-3.png" alt="user"></td>
+                    <td colspan="4">User Name
+                        <hr/>
+                        Teacher
+                    </td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>4</td>
+                    <td>5</td>
+                    <td>6</td>
+                </tr>
+            </table>
+        </div>
+        <img src="user-3.png">
+    </div>
+    <div class="outer">
+        <div class="inner">
+            <table>
+                <tr>
+                    <td colspan="2"><img src="user-3.png" alt="user"></td>
+                    <td colspan="4">User Name
+                        <hr/>
+                        Teacher
+                    </td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>4</td>
+                    <td>5</td>
+                    <td>6</td>
+                </tr>
+            </table>
+        </div>
+        <img src="user-3.png">
+    </div>
+</div>
+<!--</div>-->
+</body>
+</html>

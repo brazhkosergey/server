@@ -7,12 +7,15 @@ import com.education.simple.entity.Chat;
 import com.education.simple.entity.Message;
 import com.education.simple.entity.User;
 import com.education.simple.enums.FriendStatus;
+import com.education.simple.enums.Role;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
@@ -30,6 +33,9 @@ public class SimpleApplicationTests {
     ChatsRepository chatService;
     @Autowired
     MessageRepository messageService;
+
+    @Autowired
+    BCryptPasswordEncoder passwordEncoder;
 
     private Random random = new Random();
 
@@ -102,6 +108,20 @@ public class SimpleApplicationTests {
         assert show_tables == 5;
     }
 
+    @Test
+    public void securityTest() {
+        String s = "guest";
+
+        User user = new User();
+        user.setRole(Role.guest);
+        user.setName(s);
+        user.setMailAddress(s);
+        user.setPassword(passwordEncoder.encode(s));
+        userService.saveUser(user);
+
+        String encode = passwordEncoder.encode(s);
+        System.out.println(encode);
+    }
 
     @Test
     public void createChatTest() {
@@ -136,13 +156,13 @@ public class SimpleApplicationTests {
             }
         }
 
-        chatService.deleteChat(chat.getId());
+//        chatService.deleteChat(chat.getId());
     }
 
 
     @Test
     public void createMessageTest() {
-        Chat chat = chatService.getAllChatsByUser(22).get(0);
+        Chat chat = chatService.getAllChatsByUser(58).get(0);
         List<User> usersFromChat = chatService.getUsersFromChat(chat.getId());
         for (int i = 0; i < 20; i++) {
             int firstUser = random.nextInt(usersFromChat.size());
@@ -163,20 +183,20 @@ public class SimpleApplicationTests {
             }
 
             if (random.nextBoolean()) {
-
-                System.out.println("Message will be deleted "  +message.getId());
+                System.out.println("Message will be deleted " + message.getId());
                 messageService.deleteMessage(message.getId());
             }
         }
-        chatService.deleteChat(chat.getId());
+//        chatService.deleteChat(chat.getId());
     }
 
-    //    @Test
+    //        @Test
     public void createUsersTest() {
         for (int i = 1; i < 31; i++) {
-            User user = new User("User number " + i, "email " + i, "password " + i);
+            User user = new User("User number " + i, "email " + i + "@test.com", "password " + i);
             userService.saveUser(user);
         }
+
         List<User> allUsers = userService.getAllUsers();
         System.out.println("Users was created " + allUsers.size());
         assert allUsers.size() == 30;

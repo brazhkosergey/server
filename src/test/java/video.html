@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Video</title>
+
+    <style>
+        video { height: 240px; width: 320px; border: 1px solid grey; }
+    </style>
+
+
+    <script>
+        var localStream = null;
+
+        var streamConstraints = { "audio": true, "video": true }; // Запрашиваем доступ и к аудио, и к видео
+        // var streamConstraints = {
+        //     "audio": true,
+        //     "video": {
+        //         "mandatory": { "maxWidth": "320", "maxHeight": "240", "maxFrameRate": "5" },
+        //         "optional": []
+        //     }
+        // };
+
+        var localVideo1 = document.getElementById('localVideo1');
+
+        function getUserMedia_success(stream) {
+            console.log("getUserMedia_success():", stream);
+            localVideo1.src = URL.createObjectURL(stream); // Подключаем медиапоток к HTML-элементу <video>
+            localStream = stream; // и сохраняем в глобальной переменной для дальнейшего использования
+        }
+
+        function getUserMedia_error(error) {
+            console.log("getUserMedia_error():", error);
+        }
+
+        function getUserMedia_click() {
+            console.log("getUserMedia_click()");
+            navigator.webkitGetUserMedia(
+                streamConstraints,
+                getUserMedia_success,
+                getUserMedia_error
+            );
+        }
+
+
+
+
+    </script>
+
+</head>
+<body>
+
+<button id="btn_getUserMedia" controls="controls" onclick="getUserMedia_click()">getUserMedia</button>
+<br>
+<video id="localVideo1" controls="controls" autoplay="autoplay"></video>
+<hr>
+<video src="youtube.be/MLeIBFYY6UY" controls="controls"></video><hr>
+<video controls="controls">
+    <source src="blob:https://www.youtube.com/326eca7c-ba55-441e-b6c0-ab480d586fb8" type="video/mp4" />
+</video>
+
+<hr>
+<video controls="controls"
+       class="video-stream"
+       x-webkit-airplay="allow"
+       data-youtube-id="N9oxmRT2YWw"
+       src="http://v20.lscache8.c.youtube.com/videoplayback?sparams=id%2Cexpire%2Cip%2Cipbits%2Citag%2Cratebypass%2Coc%3AU0hPRVRMVV9FSkNOOV9MRllD&amp;itag=43&amp;ipbits=0&amp;signature=D2BCBE2F115E68C5FF97673F1D797F3C3E3BFB99.59252109C7D2B995A8D51A461FF9A6264879948E&amp;sver=3&amp;ratebypass=yes&amp;expire=1300417200&amp;key=yt1&amp;ip=0.0.0.0&amp;id=37da319914f6616c"></video>
+
+
+
+</body>
+</html>

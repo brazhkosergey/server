@@ -1,24 +1,26 @@
 package com.education.simple.entity;
 
 import com.education.simple.DAO.interfaces.ChatsRepository;
+import com.education.simple.enums.Role;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.Objects;
 
 @Component
+@Scope(value = "prototype")
 public class User implements Entity {
 
-    @Autowired
-    ChatsRepository chatsRepository;
-
     private int id;
+    private Role role;
     private String name;
     private String secondName;
     private String mailAddress;
     private String password;
     private long registrationDate;
+    private long dateOfBirth;
 
     public User() {
         registrationDate = System.currentTimeMillis();
@@ -82,6 +84,22 @@ public class User implements Entity {
 
     public void setRegistrationDate(long registrationDate) {
         this.registrationDate = registrationDate;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public long getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(long dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 
     @Override

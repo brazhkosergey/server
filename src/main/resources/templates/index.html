@@ -1,15 +1,363 @@
 <!DOCTYPE html>
-<html lang="en">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>test HTML</title>
+    <title>Education</title>
+    <link rel="icon" th:href="@{/images/login/icon.png}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/index-style.css}"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+    <style>
+
+        #icon {
+            transform: translate(0, 1vh);
+            width: 8vh;
+            height: 8vh;
+        }
+
+        #education_icon {
+            position: fixed;
+            left: 5vw;
+            color: #1a1a1a;
+            font: 8vh 'Roboto', sans-serif;
+            /*font-weight: bold;*/
+        }
+
+        header {
+            position: fixed;
+            left: 0;
+            bottom: 87vh;
+            width: 100vw;
+            height: 10vh;
+            background-color: #666666;
+        }
+
+        #content {
+            width: 99vw; /* Ширина слоя */
+            margin: 0 auto 50px; /* Выравнивание по центру */
+            height: 80vh;
+        }
+
+        #login_form table {
+            position: fixed;
+            left: 3vw;
+            top: 15vh; /* Левый нижний угол */
+        }
+
+
+        label {
+            font: 1.5vh 'Roboto', sans-serif;
+            color: #999999;
+        }
+
+
+        #login_form td {
+            width: 20.5vw;
+        }
+
+        #content input {
+            background: #CCCCCC;
+            width: 19vw;
+            height: 5vh;
+            border: none;
+            color: #666666; /* Цвет текста */
+            text-align: center;
+        }
+
+        #login_form button {
+            background: #999999;
+            color: #666666;
+            border: none;
+            width: 7vw;
+            height: 5vh;
+        }
+
+        #content a {
+            font: 1.5vh 'Roboto', sans-serif;
+            color: #1a1a1a;
+        }
+
+        #registration_form_table {
+            position: fixed;
+            left: 22vw;
+            bottom: 13vh; /* Левый нижний угол */
+        }
+
+        #registration_form_table td {
+            width: 27vw;
+            height: 9vh;
+        }
+
+        .validation_messages {
+            /*color: green;*/
+            /*color: #FF1C19;*/
+            text-align: left;
+            font: 1.5vh 'Roboto', sans-serif;
+        }
+
+        .register_input_place {
+            text-align: center;
+        }
+
+        #table_header {
+            position: fixed;
+            left: 40vw;
+            bottom: 60vh;
+            color: #1a1a1a;
+            font: 5vh 'Roboto', sans-serif;
+        }
+
+        #register_button {
+            background: #999999;
+            color: #666666;
+            border: none;
+            width: 14vw;
+            height: 5vh;
+        }
+
+        #footer {
+            position: fixed; /* Фиксированное положение */
+            left: 0;
+            bottom: 5vh; /* Левый нижний угол */
+            padding: 1vh; /* Поля вокруг текста */
+            background-color: #666666;
+            width: 100vw; /* Ширина слоя */
+            height: 3vh;
+        }
+
+        #footer_table td {
+            font: 2vh 'Roboto', sans-serif;
+            width: 10vw;
+        }
+
+        .main_page_footer {
+            text-decoration: none;
+            color: #999999;
+        }
+    </style>
+
 </head>
+
+<script>
+    var emailValidationMessage;
+    var passwordValidationMessage;
+    var passwordConfirmMessage;
+    var registrationCompleteMessage;
+
+    $(function () {
+        emailValidationMessage = $('#email_validation_message');
+        emailValidationMessage.hide();
+        passwordValidationMessage = $('#password_validation_message');
+        passwordValidationMessage.hide();
+        passwordConfirmMessage = $('#password_confirm_message');
+        passwordConfirmMessage.hide();
+        registrationCompleteMessage = $('#registration_not_complete_message');
+        registrationCompleteMessage.hide();
+    });
+
+    function setGuestUserName() {
+        $('#email_login').val('guest');
+        $('#password_login').attr('type', 'password').val('guest');
+    }
+
+    function validateEmailAddress() {
+        var charMathc = new RegExp('(\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,6})');
+        var string = document.getElementById('email_registration').value;
+        emailValidationMessage.css('text-align', 'left');
+        if (charMathc.test(string)) {
+            $.ajax({
+                type: 'get',
+                url: '/service/checkEmail?email=' + string,
+                dataType: 'text',
+                success: [function (data) {
+                    if (data.toString() == 'false') {
+                        emailValidationMessage.text("Email is valid!");
+                        emailValidationMessage.css('color', 'green');
+                        emailValidationMessage.show();
+                        return true;
+                    } else {
+                        emailValidationMessage.text("Email already used!");
+                        emailValidationMessage.css('color', 'red');
+                        emailValidationMessage.show();
+                        return false;
+                    }
+                }]
+            });
+        } else {
+            emailValidationMessage.text("Email is not valid!");
+            emailValidationMessage.css('color', 'red');
+            emailValidationMessage.show();
+            return false;
+        }
+    }
+
+
+    function passwordValidation() {
+        var chars = new RegExp('^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}$');
+        var string = $('#password_registration').val();
+        passwordValidationMessage.css('text-align', 'left');
+        if (chars.test(string)) {
+            passwordValidationMessage.text("Password valid!");
+            passwordValidationMessage.css('color', 'green');
+            passwordValidationMessage.show();
+            return true;
+        } else {
+            if (string.length < 6) {
+                passwordValidationMessage.text("Password should be more than 6 chars!");
+                passwordValidationMessage.css('color', 'red');
+                passwordValidationMessage.show();
+            } else {
+                passwordValidationMessage.text("Password should contain capital chars and numbers!");
+                passwordValidationMessage.css('color', 'red');
+                passwordValidationMessage.show();
+            }
+            return false;
+        }
+    }
+
+    function passwordConfirmation() {
+        passwordConfirmMessage.css('text-align', 'left');
+        if (passwordValidation()) {
+            pass = $('#password_registration').val();
+            confPass = $('#confirm_password').val();
+            if (pass == confPass) {
+                passwordConfirmMessage.text('Confirmed')
+                passwordConfirmMessage.css('color', 'green');
+                passwordConfirmMessage.show();
+                return true;
+            } else {
+                passwordConfirmMessage.text('Not Confirmed')
+                passwordConfirmMessage.css('color', 'red');
+                passwordConfirmMessage.show();
+                return false;
+            }
+        } else {
+            passwordConfirmMessage.text('Password is not valid. Please edit password!')
+            passwordConfirmMessage.css('color', 'red');
+            passwordConfirmMessage.show();
+            return false;
+        }
+    }
+
+    function submitForm() {
+        if (validateEmailAddress() || passwordValidation() || passwordConfirmation()) {
+            console.log("No Errors");
+            $('#registration_form').submit();
+        } else {
+            $('#registration_not_complete_message').css('text-align', 'left').css('color', 'red').show();
+        }
+    }
+</script>
 <body>
+<header>
+    <div id="education_icon">
+        <img id="icon" th:src="@{/images/login/icon.png}">
+        <b>Education</b>
+    </div>
+</header>
 
-<h1>Hello</h1>
+<div id="content">
+    <form id="login_form" th:action="@{/login}" method="post">
+        <table>
+            <tr>
+                <td><label for="email_login">Email or phone number</label><input id="email_login"
+                                                                                 name="email_login" type="text">
+                    <!--th:field="${user.mailAddress}"-->
 
+                </td>
+                <td><label for="password_login">Password</label><br><input id="password_login"
+                                                                           name="password_login"
+                                                                           type="password">
+                    <!--th:field="${user.password}"-->
+                </td>
+                <td>
+                    <br>
+                    <button type="submit">Enter</button>
+                </td>
+            </tr>
+            <tr>
+                <td><a href="#" onclick="setGuestUserName()">Try as a guest</a></td>
+                <td><a href="#">Forget password?</a></td>
+                <td>
+                    <div style=" color: #FF1C19;font: 2vh sans-serif;"
+                         th:if="${param.error}"> Email or Password invalid !
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </form>
 
+    <form id="registration_form" th:action="@{/registration}" method="post">
+        <!--onsubmit="alert('submit');return false"-->
+        <div id="table_header">Registration Form</div>
+        <table id="registration_form_table" th:object="${user}">
+            <!--<caption></caption>-->
+            <tr>
+                <td class="register_input_place"><label for="name_registration">Name<br></label>
+                    <input id="name_registration"
+                           type="text" value="Name" th:field="${user.name}"></td>
+                <td class="register_input_place"><label for="email_registration">Email *</label><br>
+                    <input id="email_registration"
+                           oninput="validateEmailAddress()"
+                           type="text"
+                           th:field="${user.mailAddress}">
+                </td>
+                <td id="email_validation_message" class="validation_messages"> Email valid</td>
+            </tr>
+            <tr>
+                <td class="register_input_place">
+                    <label for="second_name">Second Name <br></label>
+                    <input id="second_name"
+                           type="text">
+                </td>
+                <td class="register_input_place"><label for="password_registration">Password *<br></label><input
+                        id="password_registration"
+                        oninput="passwordValidation()"
+                        type="password">
+                </td>
+                <td id="password_validation_message" class="validation_messages"></td>
+            </tr>
+            <tr>
+                <td class="register_input_place"><label>Date of birth <br>
+                    <input type="date" value="1990-01-01">
+                </label></td>
+                <td class="register_input_place"><label for="confirm_password">Confirm password *<br></label>
+                    <input id="confirm_password"
+                        oninput="passwordConfirmation()"
+                        type="password"
+                        th:field="${user.password}"></td>
+                <td id="password_confirm_message" class="validation_messages"></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="register_input_place">
+                    <input type="button" id="register_button" onclick="submitForm()" value="Register">
+                </td>
+                <td id="registration_not_complete_message" class="validation_messages">Please edit all fields!</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="register_input_place" th:if="${done}" style=" font: 3vh 'Roboto', sans-serif;
+            color: green;">
+                    Registration complete successful, you can use your email <b th:text="${user.mailAddress}"></b> and password to LOGIN
+                </td>
+                <td></td>
+            </tr>
+        </table>
+    </form>
+</div>
 
-
+<div id="footer">
+    <table id="footer_table">
+        <tr>
+            <td></td>
+            <td><a class="main_page_footer" href="/">About</a></td>
+            <td><a class="main_page_footer" href="/">Language</a></td>
+            <td><a class="main_page_footer" href="/">Vacancy</a></td>
+        </tr>
+    </table>
+</div>
 </body>
 </html>

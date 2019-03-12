@@ -36,14 +36,16 @@ public class UserService implements UserRepository {
     public void saveUser(User user) {
         if (getUserByIdEmail(String.valueOf(user.getMailAddress())) == null) {
             final PreparedStatementCreator psc = connection -> {
-                final PreparedStatement ps = connection.prepareStatement("insert INTO users (name, second_name, email, password,registration_date )" +
-                                " VALUES (?,?,?,?,?)",
+                final PreparedStatement ps = connection.prepareStatement("insert INTO users (name, second_name, email, password,registration_date,role,date_of_birth)" +
+                                " VALUES (?,?,?,?,?,?,?)",
                         Statement.RETURN_GENERATED_KEYS);
                 ps.setString(1, user.getName());
                 ps.setString(2, user.getSecondName());
                 ps.setString(3, user.getMailAddress());
                 ps.setString(4, user.getPassword());
                 ps.setLong(5, user.getRegistrationDate());
+                ps.setString(6, String.valueOf(user.getRole()));
+                ps.setLong(7, user.getDateOfBirth());
                 return ps;
             };
             StaticService.setIdToEntity(jdbcTemplate, psc, user);
@@ -52,8 +54,8 @@ public class UserService implements UserRepository {
 
     @Override
     public void updateUser(User user) {
-        String SQL = "update users set name=?,second_name=?,email = ?,password = ? where id = ?";
-        jdbcTemplate.update(SQL, user.getName(), user.getSecondName(), user.getMailAddress(), user.getPassword(), user.getId());
+        String SQL = "update users set name=?,second_name=?,email = ?,password = ?, date_of_birht = ? where id = ?";
+        jdbcTemplate.update(SQL, user.getName(), user.getSecondName(), user.getMailAddress(), user.getPassword(), user.getId(),user.getDateOfBirth());
     }
 
     @Override

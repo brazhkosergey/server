@@ -1,0 +1,130 @@
+#icon {
+    transform: translate(0, 1vh);
+    width: 8vh;
+    height: 8vh;
+}
+
+#education_icon {
+    position: fixed;
+    left: 5vw;
+    color: #1a1a1a;
+    font: 8vh 'Roboto', sans-serif;
+    /*font-weight: bold;*/
+}
+
+header {
+    position: fixed;
+    left: 0;
+    bottom: 87vh;
+    width: 100vw;
+    height: 10vh;
+    background-color: #666666;
+}
+
+#content {
+    width: 99vw; /* Ширина слоя */
+    margin: 0 auto 50px; /* Выравнивание по центру */
+    height: 80vh;
+}
+
+#login_form table {
+    position: fixed;
+    left: 3vw;
+    top: 15vh; /* Левый нижний угол */
+}
+
+
+label {
+    font: 1.5vh 'Roboto', sans-serif;
+    color: #999999;
+}
+
+
+#login_form td {
+    width: 20.5vw;
+}
+
+#content input {
+    background: #CCCCCC;
+    width: 19vw;
+    height: 5vh;
+    border: none;
+    color: #666666; /* Цвет текста */
+    text-align: center;
+}
+
+#login_form button {
+    background: #999999;
+    color: #666666;
+    border: none;
+    width: 7vw;
+    height: 5vh;
+}
+
+#content a {
+    font: 1.5vh 'Roboto', sans-serif;
+    color: #1a1a1a;
+}
+
+#registration_form_table {
+    position: fixed;
+    left: 22vw;
+    bottom: 13vh; /* Левый нижний угол */
+}
+
+#registration_form_table td {
+    width: 27vw;
+    height: 9vh;
+}
+
+.validation_messages {
+    /*color: green;*/
+    /*color: #FF1C19;*/
+    text-align: left;
+    font: 1.5vh 'Roboto', sans-serif;
+}
+
+#registration_complete_message {
+    font: 3vh 'Roboto', sans-serif;
+    color: green;
+}
+
+.register_input_place {
+    text-align: center;
+}
+
+#table_header {
+    position: fixed;
+    left: 40vw;
+    bottom: 60vh;
+    color: #1a1a1a;
+    font: 5vh 'Roboto', sans-serif;
+}
+
+#register_button {
+    background: #999999;
+    color: #666666;
+    border: none;
+    width: 14vw;
+    height: 5vh;
+}
+
+#footer {
+    position: fixed; /* Фиксированное положение */
+    left: 0;
+    bottom: 5vh; /* Левый нижний угол */
+    padding: 1vh; /* Поля вокруг текста */
+    background-color: #666666;
+    width: 100vw; /* Ширина слоя */
+    height: 3vh;
+}
+
+#footer_table td {
+    font: 2vh 'Roboto', sans-serif;
+    width: 10vw;
+}
+
+.main_page_footer {
+    text-decoration: none;
+    color: #999999;
+}

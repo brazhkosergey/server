@@ -1,13 +1,8 @@
 package com.education.simple.entity;
 
-import com.education.simple.DAO.implement.ChatService;
 import com.education.simple.DAO.interfaces.ChatsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
-
-import javax.jws.soap.SOAPBinding;
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
