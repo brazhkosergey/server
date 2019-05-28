@@ -1,0 +1,65 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<div id="entity_details_container" th:object="${entity}">
+    <div id="entity_details_left_block">
+        <div id="entity_details_image_block">
+            <img    th:src="${entity.imagePath}" alt="image"></div>
+        <div id="entity_details_name_block">
+            <h3>Event Type</h3> <br> <b th:text="${entity.name}"></b> <br> <b th:text="${entity.secondName}"> </b>
+            <table>
+                <tr>
+                    <td>
+                        <img th:src="@{/images/main/view.png}">
+                        25
+                    </td>
+                    <td>
+                        <img th:src="@{/images/main/like.png}">
+                        52
+                    </td>
+                    <td>
+                        <img th:src="@{/images/main/comment.png}">
+                        55
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id="entity_details_connect_block"><img th:src="@{/images/main/add_section.png}"></div>
+        <div id="entity_details_message_block"><img th:src="@{/images/main/message.png}"></div>
+        <div id="entity_details_buttons_block">
+            <table>
+                <tr>
+                    <td>
+                        <button onclick="addContent('Main information')">Main information</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button onclick="addContent('Multimedia data')">Multimedia data</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button onclick="addContent('Related users')">Related users</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button onclick="addContent('Scheduler')">Scheduler</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button onclick="addContent('button 5')">Button 5</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div id="entity_details_right_block">
+        <hr>
+        <H1>CONTENT</H1>
+        <hr>
+    </div>
+</div>

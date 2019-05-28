@@ -18,19 +18,21 @@ public class TESTS {
     static Random random = new Random();
 
     public static void main(String[] args) {
-        DataSource dataSource = getDataSource();
-        UserService userService = new UserService(new JdbcTemplate(dataSource));
-        ChatService chatService = new ChatService(new JdbcTemplate(dataSource));
+
+        long year = 60 * 1000 * 60 * 24 * 365;
+        System.out.println(year);
+//        DataSource dataSource = getDataSource();
+//        UserService userService = new UserService(new JdbcTemplate(dataSource));
+//        ChatService chatService = new ChatService(new JdbcTemplate(dataSource));
 
 //        createUsersAndFriends(userService);
 //        chatCreationTest(chatService,userService);
 
 
-
     }
 
 
-    static void chatCreationTest(ChatService chatService,UserService userService){
+    static void chatCreationTest(ChatService chatService, UserService userService) {
         List<User> allUsers = userService.getAllUsers();
         User userChatMaker = allUsers.get(random.nextInt(allUsers.size()));
         User user1 = allUsers.get(random.nextInt(allUsers.size()));
@@ -45,13 +47,8 @@ public class TESTS {
 
         List<Chat> allChatsByUser = chatService.getAllChatsByUser(userChatMaker.getId());
         System.out.println("Chats ");
-        for(Chat ch:allChatsByUser){
-            System.out.println("Name "+ch.getChatName());
-            List<Integer> usersId = ch.getUsersId();
-            System.out.println("USERS");
-            for(Integer id:usersId){
-                System.out.println("Name of User "+userService.getUserById(id).getName());
-            }
+        for (Chat ch : allChatsByUser) {
+            System.out.println("Name " + ch.getChatName());
         }
 
     }
@@ -96,9 +93,7 @@ public class TESTS {
     }
 
 
-
-
-    static DataSource getDataSource(){
+    static DataSource getDataSource() {
         DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
         driverManagerDataSource.setUrl("jdbc:mysql://localhost:3306/test");
         driverManagerDataSource.setUsername("root");

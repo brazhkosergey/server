@@ -1,0 +1,25 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<div class="outer" th:each="user:${friends}" th:data-id="${user.id}" th:data-email = "${user.email}">
+    <div class="inner">
+        <table>
+            <tr>
+                <td colspan="2"><img th:src="@{/images/main/user-3.png}" alt="user"></td>
+                <td colspan="4" class="chat_friend_name" th:text="${user.name+' '+user.secondName}">
+                    <hr/>
+                    <b th:text="user.entityType"></b>
+                </td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+            </tr>
+        </table>
+    </div>
+    <img th:src="@{/images/main/user-3.png}">
+</div>

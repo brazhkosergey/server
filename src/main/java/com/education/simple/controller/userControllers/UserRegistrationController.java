@@ -13,13 +13,10 @@ import org.springframework.web.servlet.ModelAndView;
 public class UserRegistrationController {
     @Autowired
     UserRepository userRepository;
-    @Autowired
-    BCryptPasswordEncoder passwordEncoder;
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public ModelAndView creteNewUser(User user, ModelAndView modelAndView) {
         user.setRole(Role.user);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.saveUser(user);
         modelAndView.addObject("user", user);
         modelAndView.addObject("done", true);

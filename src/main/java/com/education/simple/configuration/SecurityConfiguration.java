@@ -51,17 +51,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-
         auth.
                 userDetailsService(userDatailsService)
                 .passwordEncoder(bCryptPasswordEncoder);
-
-//        auth.
-//                jdbcAuthentication()
-//                .usersByUsernameQuery(usersQuery)
-//                .authoritiesByUsernameQuery(rolesQuery)
-//                .dataSource(dataSource)
-//                .passwordEncoder(bCryptPasswordEncoder);
     }
 
     // Lines from 44 to 61 → Here we define the antMatchers to provide access based on the role(s)
@@ -92,7 +84,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         web
                 .ignoring()
                 .antMatchers(
-//                        "/resources/**",
+//                        "/test",
                         "/registration/**",
                         "/service/**",
                         "/static/**",

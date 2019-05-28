@@ -1,0 +1,43 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<table>
+    <th:block th:each="list:${entities}">
+        <!--<tr id="news_table_template">-->
+        <tr>
+            <th:block th:each="ent:${list}">
+                <td class="news_block" th:data-id="${ent.id}">
+                    <div class="news_image_container">
+                        <img class="news_image" th:src="${ent.imagePath}" alt="image">
+                        <!--th:src="@{/images/news/training_1.jpeg}"-->
+
+                    </div>
+                    <div class="news_details">
+                        <div class="news_name" th:text="${ent.name +' '+ent.secondName}"></div>
+                        <div class="news_details_table_container">
+                            <table>
+                                <tr>
+                                    <td class="news_details_icons_block">
+                                        <img class="news_details_icons" th:src="@{/images/main/view.png}">
+                                        <b th:text="${ent.viewsCount}"></b>
+                                    </td>
+                                    <td class="news_details_icons_block">
+                                        <img class="news_details_icons" th:src="@{/images/main/comment.png}">
+                                        <b th:text="${ent.commentsCount}"></b>
+                                    </td>
+                                    <td class="news_details_icons_block">
+                                        <img class="news_details_icons" th:src="@{/images/main/like.png}">
+                                        <b th:text="${ent.likesCount}"></b>
+                                    </td>
+                                    <td class="news_details_icons_block">
+                                        <img class="news_details_icons" th:src="@{/images/main/next.png}">
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </td>
+            </th:block>
+        </tr>
+    </th:block>
+</table>

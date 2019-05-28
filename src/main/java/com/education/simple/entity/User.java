@@ -1,6 +1,7 @@
 package com.education.simple.entity;
 
 import com.education.simple.DAO.interfaces.ChatsRepository;
+import com.education.simple.enums.EntityType;
 import com.education.simple.enums.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -8,10 +9,12 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.Objects;
+import java.util.Random;
 
 @Component
 @Scope(value = "prototype")
-public class User implements Entity {
+public class User implements Entity,HttpEntity {
+    Random random  = new Random();
 
     private int id;
     private Role role;
@@ -21,6 +24,8 @@ public class User implements Entity {
     private String password;
     private long registrationDate;
     private long dateOfBirth;
+
+
 
     public User() {
         registrationDate = System.currentTimeMillis();
@@ -42,8 +47,64 @@ public class User implements Entity {
         return id;
     }
 
+    @Override
+    public EntityType getEntityType() {
+        return null;
+    }
+
     public String getName() {
         return name;
+    }
+
+    @Override
+    public String getEmail() {
+        return mailAddress;
+    }
+
+    @Override
+    public int getLikesCount() {
+        return random.nextInt(1000);
+    }
+
+    @Override
+    public int getViewsCount() {
+
+        return random.nextInt(1000);
+    }
+
+    @Override
+    public int getCommentsCount() {
+        return random.nextInt(1000);
+    }
+
+    @Override
+    public String getImagePath() {
+        return "/images/news/training_1.jpeg";
+    }
+
+    @Override
+    public String getFirstButtonName() {
+        return null;
+    }
+
+    @Override
+    public String getSecondButtonName() {
+        return null;
+    }
+
+    @Override
+    public String getThirdButtonName() {
+        return null;
+    }
+
+    @Override
+    public String getFourthButtonName() {
+        return null;
+    }
+
+    @Override
+    public String getFifthButtonName() {
+        return null;
     }
 
     public void setName(String name) {

@@ -48,13 +48,15 @@ public class MessageService implements MessageRepository {
     }
 
     @Override
-    public List<Message> getNewMessage(Long userId) {
+    public List<Message> getNewMessage(int userId) {
         String sql = "select * from messages where userId=? and was_read = 0";
         return jdbcTemplate.query(sql, new MessageMapper(), userId);
     }
 
     @Override
-    public List<Message> getMessageByChatFromDateToDate(Long chatId, Long dateFrom, Long dateTo) {
+    public List<Message> getMessageByChatFromDateToDate(int chatId, Long dateFrom, Long dateTo) {
+
+        System.out.println("message for chat number - "+chatId);
         String sql = "select * from messages where chat_id=? and time_message >  ? and time_message < ?";
         return jdbcTemplate.query(sql, new MessageMapper(), chatId, dateFrom, dateTo);
     }

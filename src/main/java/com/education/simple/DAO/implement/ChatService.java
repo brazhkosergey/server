@@ -53,14 +53,28 @@ public class ChatService implements ChatsRepository {
             return ps;
         };
         StaticService.setIdToEntity(jdbcTemplate, psc, chat);
-        List<Integer> usersId = chat.getUsersId();
-        for (Integer id : usersId) {
-            addUserToChat(chat.getId(), id);
-        }
     }
 
     @Override
-    public void addUserToChat(long chatId, long userId) {
+    public Chat getChatByUsers(List<Integer> userdId) {
+
+        return null;
+    }
+
+
+    @Override
+    public Chat getChatForTwoUsers(int firstUser, int secondUser) {
+        Chat chat = null;
+        String SQL = "SELECT * from chats where id = (select chat_id from chats_users where user_id = ? or user_id=? group by(chat_id) having count(chat_id)=2)";
+        List<Chat> query = jdbcTemplate.query(SQL, new ChatMapper(), firstUser, secondUser);
+        if (query.size() != 0) {
+            chat = query.get(0);
+        }
+        return chat;
+    }
+
+    @Override
+    public void addUserToChat(int chatId, int userId) {
         String checkSql = "select * from chats_users where chat_id = ? and user_id=?";
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(checkSql, chatId, userId);
         if (maps.size() == 0) {
@@ -70,26 +84,26 @@ public class ChatService implements ChatsRepository {
     }
 
     @Override
-    public void deleteChat(long chatId) {
+    public void deleteChat(int chatId) {
         String sql = "delete from chats where id = ?";
         jdbcTemplate.update(sql, chatId);
     }
 
     @Override
-    public List<Chat> getAllChatsByUser(long userId) {
+    public List<Chat> getAllChatsByUser(int userId) {
         String sql = "select * from chats where creator_id = ?";
         List<Chat> query = jdbcTemplate.query(sql, new ChatMapper(), userId);
         return query;
     }
 
     @Override
-    public List<User> getUsersFromChat(Long chatId) {
+    public List<User> getUsersFromChat(int chatId) {
         String sql = "SELECT  * from users where id in (select user_id from chats_users where chat_id = ?)";
         return jdbcTemplate.query(sql, new UserMapper(), chatId);
     }
 
     @Override
-    public List<Message> getAllMessageFromChat(Long chatId) {
+    public List<Message> getAllMessageFromChat(int chatId) {
         String sql = "select * from messages where chat_id=?";
         return jdbcTemplate.query(sql, new MessageMapper(), chatId);
     }

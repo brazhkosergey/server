@@ -138,6 +138,14 @@
             text-decoration: none;
             color: #999999;
         }
+
+
+        #test_div{
+            position: absolute;
+            top: 80vh ;
+            left: 5vw;
+        }
+
     </style>
 
 </head>
@@ -160,8 +168,10 @@
     });
 
     function setGuestUserName() {
-        $('#email_login').val('guest');
-        $('#password_login').attr('type', 'password').val('guest');
+        // $('#email_login').val('guest');
+        $('#email_login').val('1@test.com');
+        // $('#password_login').attr('type', 'password').val('guest');
+        $('#password_login').attr('type', 'password').val('Pass123');
     }
 
     function validateEmailAddress() {
@@ -245,12 +255,27 @@
 
     function submitForm() {
         if (validateEmailAddress() || passwordValidation() || passwordConfirmation()) {
-            console.log("No Errors");
             $('#registration_form').submit();
         } else {
             $('#registration_not_complete_message').css('text-align', 'left').css('color', 'red').show();
         }
     }
+
+    function test() {
+        var ip_address= $('#test_input').val();
+        console.log(ip_address);
+
+        $.ajax({
+            type: "POST",
+            url: "/login",
+            data: {updateip : "false", ipaddress : ip_address},
+            timeout: 10000, //If the post doesnt finish in under 10 seconds this will force an error event
+            success:[function (data) {
+               alert(data);
+            }]
+        });
+    }
+
 </script>
 <body>
 <header>
@@ -327,9 +352,9 @@
                 </label></td>
                 <td class="register_input_place"><label for="confirm_password">Confirm password *<br></label>
                     <input id="confirm_password"
-                        oninput="passwordConfirmation()"
-                        type="password"
-                        th:field="${user.password}"></td>
+                           oninput="passwordConfirmation()"
+                           type="password"
+                           th:field="${user.password}"></td>
                 <td id="password_confirm_message" class="validation_messages"></td>
             </tr>
             <tr>
@@ -341,12 +366,19 @@
             <tr>
                 <td colspan="2" class="register_input_place" th:if="${done}" style=" font: 3vh 'Roboto', sans-serif;
             color: green;">
-                    Registration complete successful, you can use your email <b th:text="${user.mailAddress}"></b> and password to LOGIN
+                    Registration complete successful, you can use your email <b th:text="${user.mailAddress}"></b> and
+                    password to LOGIN
                 </td>
                 <td></td>
             </tr>
         </table>
     </form>
+
+
+    <div id="test_div"><input id="test_input" type="text">
+        <button id="test_button" onclick="test()">Set IP</button>
+    </div>
+
 </div>
 
 <div id="footer">

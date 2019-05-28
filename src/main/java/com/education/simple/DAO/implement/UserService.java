@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.*;
@@ -24,6 +25,9 @@ public class UserService implements UserRepository {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    BCryptPasswordEncoder passwordEncoder;
+
 
     public UserService() {
     }
@@ -35,6 +39,7 @@ public class UserService implements UserRepository {
     @Override
     public void saveUser(User user) {
         if (getUserByIdEmail(String.valueOf(user.getMailAddress())) == null) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             final PreparedStatementCreator psc = connection -> {
                 final PreparedStatement ps = connection.prepareStatement("insert INTO users (name, second_name, email, password,registration_date,role,date_of_birth)" +
                                 " VALUES (?,?,?,?,?,?,?)",
@@ -55,7 +60,7 @@ public class UserService implements UserRepository {
     @Override
     public void updateUser(User user) {
         String SQL = "update users set name=?,second_name=?,email = ?,password = ?, date_of_birht = ? where id = ?";
-        jdbcTemplate.update(SQL, user.getName(), user.getSecondName(), user.getMailAddress(), user.getPassword(), user.getId(),user.getDateOfBirth());
+        jdbcTemplate.update(SQL, user.getName(), user.getSecondName(), user.getMailAddress(), user.getPassword(), user.getId(), user.getDateOfBirth());
     }
 
     @Override

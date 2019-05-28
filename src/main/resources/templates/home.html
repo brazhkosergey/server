@@ -7,58 +7,814 @@
 
     <link rel="icon" th:href="@{/images/main/icon.png}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/home-style.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/current_chat_style.css}"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <!--<script th:src="@{js/chat.js}"></script>-->
 
+    <style>
+        :root {
+            --color_1: rgba(24, 24, 24, 1);
+            --color_2: rgba(63, 63, 63, 1);
+            --color_3: rgba(103, 103, 103, 1);
+            --color_3_o: rgba(103, 103, 103, 0.8);
+            --color_4: rgba(167, 167, 167, 1);
+            --color_5: rgba(233, 233, 233, 1);
+            --color_6: rgba(255, 255, 255, 1);
+        }
+
+        li {
+            list-style-type: none;
+        }
+
+        a {
+            font: 2vh 'Roboto', sans-serif;;
+            text-decoration: none;
+            color: var(--color_6);
+        }
+
+        h2 {
+            font: 3vh 'Roboto', sans-serif;;
+        }
+
+        header {
+            position: fixed;
+            left: 0.1%;
+            bottom: 89.5%;
+            width: 99.8%;
+            height: 10%;
+            /*background-color: #666666;*/
+            background-color: var(--color_3);
+            z-index: 9;
+        }
+
+        #main_menu {
+            position: fixed;
+            left: 0.1vw;
+            bottom: 86vh;
+            width: 99.8vw;
+            height: 3vh;
+            /*background-color: #666666;*/
+            background-color: var(--color_3);
+        }
+
+        #content {
+            position: fixed;
+            left: 0.1%;
+            bottom: 0.1%;
+            width: 99.8%;
+            height: 85.5%;
+            overflow: auto;
+            z-index: 1;
+
+        }
+
+        /*==================HEADER==============================*/
+        /*==================HEADER==============================*/
+        /*==================HEADER==============================*/
+
+        #icon {
+            transform: translate(0, 1vh);
+            width: 8vh;
+            height: 8vh;
+        }
+
+        #education_header_container {
+            position: fixed;
+            left: 5vw;
+            color: var(--color_1, rgba(24, 24, 24, 1));
+            font: 8vh 'Roboto', sans-serif;
+        }
+
+        #search_input {
+            position: fixed;
+            top: 4vh;
+            left: 35vw;
+            width: 40vw;
+            height: 4vh;
+            font: 3vh 'Roboto', sans-serif;
+            text-align: center;
+        }
+
+        #search_button {
+            position: fixed;
+            top: 4vh;
+            left: 76vw;
+            /*background: #a6a6a6;*/
+            background: var(--color_4);
+            /*color: #666666;*/
+            color: var(--color_3);
+            border: none;
+            width: 5vh;
+            height: 5vh;
+        }
+
+        #search_icon {
+            position: relative;
+            left: -5%;
+            top: 50%;
+            width: 120%;
+            height: 100%;
+        }
+
+        #user_name a {
+            font: 3vh 'Roboto', sans-serif;
+            position: fixed;
+            top: 6vh;
+            left: 83vw;
+            color: --color_6;
+        }
+
+        #user_icon {
+            position: fixed;
+            left: 95vw;
+            top: 1vh;
+        }
+
+        #user_icon img {
+            transform: translate(0, 0.5vh);
+            width: 8vh;
+            height: 8vh;
+        }
+
+        #user_setting_menu {
+            position: fixed;
+            left: 89.5vw;
+            top: 10vh;
+            width: 9vw;
+            height: 20vh;
+            background-color: rgba(102, 102, 102, 0.9);
+            line-height: 7%;
+            text-align: right;
+            margin: 1%;
+            z-index: 999999;
+        }
+
+        #user_setting_menu a {
+            font: 2vh 'Roboto', sans-serif;;
+        }
+
+        /*====================MAIN MENU=========================================*/
+        /*====================MAIN MENU=========================================*/
+        /*====================MAIN MENU=========================================*/
+
+        #main_menu table {
+            position: fixed;
+            left: 2vw;
+            bottom: 86vh;
+            text-align: center;
+            height: 3vh;
+            width: 96vw;
+        }
+
+        #main_menu img {
+            height: 2vh;
+            width: 2vh;
+        }
+
+        #main_menu td {
+            font: 2vh 'Roboto', sans-serif;
+        }
+
+        /*===========================CONTAINER==========================================*/
+        /*===========================CONTAINER==========================================*/
+        /*===========================CONTAINER==========================================*/
+
+        #sections {
+            /*background-color: #FF1C19;*/
+            position: fixed;
+            top: 14.5vh;
+            left: 0.1vw;
+            width: 8vh;
+            height: 85vh;
+            z-index: 2;
+            text-align: center;
+        }
+
+        #sections img {
+            width: 6vh;
+            height: 6vh;
+        }
+
+        #sections .inner {
+            position: fixed;
+            top: 14.5vh;
+            left: 7.4vh;
+            width: 30vw;
+            height: 80vh;
+            background-color: rgba(102, 102, 102, 0.7);
+            column-count: 3;
+            column-gap: 1vw;
+            column-width: 9vw;
+            column-rule: 1px #FF1C19;
+        }
+
+
+        #news_table {
+            border-spacing: 1vh;
+            margin: auto;
+            font: 2vh 'Roboto', sans-serif;
+        }
+
+        #news_table .news_block {
+            /*background-color: #a6a6a6;*/
+            background-color: var(--color_4);
+            width: 40vh;
+            height: 40vh;
+        }
+
+        .news_image_container {
+            position: relative;
+            top: 1%;
+            left: 1%;
+            width: 98%;
+            height: 70%;
+        }
+
+        .news_details {
+            position: relative;
+            left: 1%;
+            top: 1%;
+            width: 98%;
+            height: 30%;
+        }
+
+        .news_name {
+            position: relative;
+            width: 100%;
+            height: 65%;
+            font: 2vh 'Roboto', sans-serif;
+            color: var(--color_6);
+            text-align: center;
+        }
+
+        .news_details_table_container {
+            position: relative;
+            width: 100%;
+            height: 35%;
+        }
+
+        .news_details_table_container table {
+            text-align: center;
+            font: 1.5vh 'Roboto', sans-serif;
+        }
+
+        .news_details_icons_block {
+            position: relative;
+            width: 25vw;
+            height: 3.5vh;
+        }
+
+        .news_image {
+            width: 100%;
+            height: 100%;
+        }
+
+        .news_details_icons {
+            width: 30%;
+        }
+
+        #chat {
+            position: fixed;
+            top: 14.5vh;
+            right: 3.1vh;
+            width: 8vh;
+            height: 85vh;
+            text-align: right;
+            z-index: 3;
+        }
+
+        #chat img {
+            width: 6vh;
+            height: 6vh;
+        }
+
+        #chat .outer {
+            position: relative;
+        }
+
+        #chat .inner {
+            position: absolute;
+            right: 8vh;
+            width: 30vh;
+            height: 15vh;
+            background-color: rgba(102, 102, 102, 0.7);
+            text-align: left;
+        }
+
+
+        #chat td {
+            width: 6vh;
+            height: 6vh;
+            text-align: center;
+        }
+
+
+        #entity_details_container {
+            position: relative;
+            margin: auto;
+            font: 2vh 'Roboto', sans-serif;
+            color: var(--color_6);
+            width: 170vh;
+            height: 85vh;
+            text-align: center;
+            /*background-color: #a6a6a6;*/
+            background-color: var(--color_4);
+        }
+
+
+        #entity_details_left_block {
+            position: absolute;
+            top: 1vh;
+            left: 1vh;
+            width: 66vh;
+            height: 83vh;
+            background-color: var(--color_6);
+        }
+
+        #entity_details_right_block {
+            position: absolute;
+            top: 1vh;
+            left: 68vh;
+            width: 101vh;
+            /*color: #666666;*/
+            /*background-color: #a6a6a6;*/
+            color: var(--color_3);
+            background-color: var(--color_4);
+        }
+
+        #entity_details_image_block {
+            position: absolute;
+            top: 0.5vh;
+            left: 0.5vh;
+            width: 39vh;
+            height: 31vh;
+            /*background-color: #666666;*/
+            background-color: var(--color_3);
+            vertical-align: center;
+        }
+
+        #entity_details_image_block img {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            margin: auto;
+            width: 99%;
+        }
+
+        #entity_details_name_block {
+            padding-left: 0.5vh;
+            position: absolute;
+            top: 0.5vh;
+            left: 40vh;
+            width: 25vh;
+            height: 21vh;
+            background-color: var(--color_3);
+            font: 2vh 'Roboto', sans-serif;
+            text-align: left;
+        }
+
+        #entity_details_name_block table {
+            position: absolute;
+            bottom: 0.5vh;
+        }
+
+        #entity_details_name_block td {
+            text-align: center;
+            width: 9vh;
+        }
+
+        #entity_details_name_block table img {
+            height: 2vh;
+        }
+
+        #entity_details_connect_block {
+            position: absolute;
+            top: 22vh;
+            left: 40vh;
+            width: 12.5vh;
+            height: 9.5vh;
+            background-color: var(--color_3);
+        }
+
+        #entity_details_connect_block img {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            margin: auto;
+            width: 7vh;
+        }
+
+        #entity_details_message_block {
+            position: absolute;
+            top: 22vh;
+            left: 53vh;
+            width: 12.5vh;
+            height: 9.5vh;
+            background-color: var(--color_3);
+        }
+
+        #entity_details_message_block img {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            margin: auto;
+            width: 7vh;
+        }
+
+        #entity_details_buttons_block {
+            position: absolute;
+            left: 0.5vh;
+            top: 32vh;
+            height: 50.5vh;
+            width: 65vh;
+            background-color: var(--color_3);
+        }
+
+        #entity_details_buttons_block button {
+            background: var(--color_4);
+            color: var(--color_6);
+            border: none;
+            outline-color: var(--color_6);
+            outline-style: wave;
+            width: 55vh;
+            height: 8vh;
+            font: 3vh 'Roboto', sans-serif;
+        }
+
+        #entity_details_buttons_block table {
+            margin: auto;
+        }
+
+        #entity_details_buttons_block td {
+            width: 32vh;
+            height: 9.5vh;
+        }
+
+        #current_chat {
+            position: fixed;
+            bottom: 1vh;
+            right: 12vh;
+            background-color: var(--color_3_o);
+            width: 35vh;
+            height: 57vh;
+            z-index: 9999;
+            border-radius: 1vh;
+        }
+
+        #current_chat_container {
+            margin: auto;
+            height: 100%;
+            width: 100%;
+            position: relative;
+        }
+
+        #current_chat_header {
+            position: absolute;
+            right: 0.3vh;
+            width: 34.2vh;
+            height: 6vh;
+        }
+
+        #current_chat_header img {
+            width: 5vh;
+            height: 5vh;
+            position: absolute;
+            top: 0.3vh;
+            left: 0.3vh;
+        }
+
+        #current_chat_header b {
+            font: 3vh 'Roboto', sans-serif;
+            position: absolute;
+            bottom: 1vh;
+            left: 6vh;
+            color: var(--color_5);
+        }
+
+        #current_chat_header button {
+            text-align: center;
+            width: 3vh;
+            height: 3vh;
+            background: var(--color_4);
+            color: var(--color_6);
+            font: 2.5vh 'Roboto', sans-serif;
+            outline-style: none;
+            border: none;
+            position: absolute;
+            top: 1.5vh;
+            right: 1.5vh;
+
+        }
+
+        #current_chat_input_area {
+            position: absolute;
+            bottom: 0.3vh;
+            height: 9vh;
+            width: 34.2vh;
+            right: 0.3vh;
+        }
+
+        #current_chat_messages_area {
+            position: absolute;
+            top: 6.3vh;
+            left: 0.4vh;
+            background-color: var(--color_5);
+            width: 34vh;
+            height: 40.7vh;
+            overflow: auto;
+            padding: 0.1vh;
+            font: 2vh 'Roboto', sans-serif;
+        }
+
+        .chat_input_message {
+            padding: 0.2vh;
+            alignment: left;
+            margin-bottom: 0.3vh;
+            width: 25vh;
+            background-color: var(--color_3);
+            border-radius: 0.5vh;
+            color: var(--color_2);
+        }
+
+        .chat_output_message {
+            text-align: right;
+            alignment: right;
+            margin-bottom: 0.3vh;
+            margin-left: auto;
+            padding: 0.2vh;
+            width: 25vh;
+            background-color: var(--color_4);
+            border-radius: 0.5vh;
+            color: var(--color_3);
+        }
+
+        #chat_message_text_field {
+            position: absolute;
+            top: 0.2vh;
+            left: 0.2vh;
+            width: 26.5vh;
+            height: 5.2vh;
+            resize: none;
+            border-radius: 0.5vh;
+            font: 2vh 'Roboto', sans-serif;
+            color: var(--color_3);
+        }
+
+        #chat_message_submit_button {
+            position: absolute;
+            top: 0.2vh;
+            left: 28vh;
+            width: 6vh;
+            height: 6vh;
+            border-radius: 0.5vh;
+            background: var(--color_4);
+            color: var(--color_6);
+            font: 3.5vh 'Roboto', sans-serif;
+            outline-style: none;
+            border: none;
+        }
+
+    </style>
     <script>
+        var stompClient = null;
+        var currentChat = null;
+
+        function connectToChatListener() {
+            var socket = new SockJS('/ws');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, onConnected, onError);
+        }
+
+        function onConnected() {
+            var pushSubscriptionPromise = stompClient.subscribe('/queue', onMessageReceivedChatRequest);
+            // stompClient.subscribe('/chat/13', onMessageReceived);
+        }
+
+        function sendChatRequest(receiverEmail) {
+            var userId = $('#user_icon').attr('data-id');
+            stompClient.send("/app/open_chat", {}, JSON.stringify(receiverEmail));
+            console.log("Will send request for "+receiverEmail)
+            // stompClient.send('/chat/13', {}, JSON.stringify(receiverEmail));
+        }
+
+        function onError() {
+            alert("No web socket connection to server!");
+        }
+
+        function onMessageReceived(payload) {
+            alert("received message ");
+            var message = JSON.parse(payload.body);
+            alert("received message " + message);
+        }
+
+        function onMessageReceivedChatRequest(payload) {
+
+            alert("Chat request from "+JSON.parse(payload));
+
+        }
+
+        function disconnect(pushSubscriptionPromise) {
+            pushSubscriptionPromise.unsubscribe()//для отписаться от чата
+        }
+
         $(function () {
-            addRow();
-            $('#content').scroll(function () {
-                var position = $('#content').scrollTop();
-                var lastRowPosition = $('#content_table tr:last').offset().top;
-                var height = $(window).height();
-                if (lastRowPosition < height) {
-                    addRow();
-                }
+            connectToChatListener();
+            showNews();
+            showChat();
+
+            $('#user_icon').hover(function () {
+                $(this).find('div').slideDown();
+            }, function () {
+                $(this).find('div').slideUp('fast');
             });
         });
 
-        function addRow() {
-            console.log(html);
-            for (var i = 0; i < 3; i++) {
-                var html = $('#news_table_template').clone();
-                $('#content_table').append(html);
-            }
-        }
-
-        function removeRow() {
-            $('#content_table tr:last').remove();
-        }
-
-        $(function () {
+        function connectSlideDownEffects() {
             $('.inner').hide();
-            $('.outer').hover(
-                function () {
-                    $(this).find('img').width('8vh')
-                    $(this).find('img').height('8vh')
-                    $(this).find('div').slideDown("fast");
-                }, function () {
-                    $(this).find('img').width('6vh')
-                    $(this).find('img').height('6vh')
-                    $(this).find('div').hide();
-                });
+            $('#current_chat').hide();
+            $('.outer').hover(function () {
+                $(this).find('img').width('8vh');
+                $(this).find('img').height('8vh');
+                $(this).find('div').slideDown("fast");
+            }, function () {
+                $(this).find('img').width('6vh');
+                $(this).find('img').height('6vh');
+                $(this).find('div').hide();
+            });
 
-            $('#user_icon').hover(
-                function () {
-                    $(this).find('div').slideDown();
+            $('#chat .outer').click(function () {
+                var receiver_id = $(this).attr('data-id');
+                var receiverEmail = $(this).attr('data-email');
+                var receiver_name = $(this).find('td.chat_friend_name').text();
+                showCurrentChat(receiver_id, receiver_name, receiverEmail);
+            });
+        }
+
+
+        // ======================NEWS
+        function addRow() {
+            $.ajax({
+                type: 'post',
+                url: '/news',
+                dataType: 'text',
+                success: [function (data) {
+                    $('#content_table').append(data);
+                    addNewsClickListener();
+                }]
+            });
+        }
+
+        function addNewsClickListener() {
+            $('.news_block').click(function () {
+                showEntityDetails($(this).attr('data-id'));
+            })
+        }
+
+        function showNews() {
+            var content = $('#content');
+            $.ajax({
+                type: 'get',
+                url: '/news',
+                dataType: 'text',
+                success: [function (data) {
+                    content.html(data);
+                    addRow();
+                    $('#content').scroll(function () {
+                        var position = $('#content').scrollTop();
+                        var lastRowPosition = $('#content_table tr:last').offset().top;
+                        var height = $(window).height();
+                        if (lastRowPosition < height) {
+                            addRow();
+                        }
+                    });
+
+                }]
+            });
+        }
+
+        function showEntityDetails(id) {
+            var content = $('#content');
+            $.ajax({
+                type: 'POST',
+                url: '/user_details',
+                data: {"id": id},
+                dataType: 'text',
+                success: [function (data) {
+                    content.html(data);
+                }]
+            });
+        }
+
+        // ===================================CHAT
+        function showChat() {
+            var userId = $('#user_icon').attr('data-id');
+
+            $.ajax({
+                type: 'post',
+                url: '/chat',
+                data: {'id': userId},
+                dataType: 'text',
+                success: [function (data) {
+                    $('#chat').html(data);
+                    connectSlideDownEffects()
+                }],
+                error: [function () {
+                    connectSlideDownEffects();
+                }]
+            });
+        }
+
+        // ====================================CURRENT CHAT
+        function hideChat() {
+            disconnect(currentChat);
+            $('#current_chat').hide('slow');
+        }
+
+        function showCurrentChat(receiverId, receiverName, receiverEmail) {
+            var chat = $('#current_chat');
+            var userId = $('#user_icon').attr('data-id');
+            console.log('send ajax to current chat from ' + userId + " to " + receiverName + " with ID " + receiverId)
+            $.ajax({
+                type: 'post',
+                url: '/current_chat',
+                data: {
+                    'makerId': userId,
+                    'receiverId': receiverId,
+                    'receiverEmail': receiverEmail,
+                    'receiverName': receiverName
                 },
-                function () {
-                    $(this).find('div').slideUp('fast');
-                }
-            );
-        });//выползайки
+                dataType: 'text',
+                success: [function (data) {
 
+                    currentChat = stompClient.subscribe('/chat/13', onMessageReceived);//==========================
+                    chat.html(data);
+                    chat.show("slow");
+                    expandChat();
+                    $('#current_chat_header').click(function () {//складывалка для чата
+                        var windowsHeight = $(window).height() * 50 / 100;
+                        if ($('#current_chat').height() < windowsHeight) {
+                            expandChat()
+                        } else {
+                            rollUpChat();
+                        }
+                    });
+                }]
+            });
+        }
+
+        function expandChat() {
+            var windowsHeight = $(window).height() * 57 / 100;
+            $('#current_chat').height(windowsHeight);
+            $('#current_chat_input_area').show();
+            scrollCurrentChat();
+        }
+
+        function scrollCurrentChat() {
+            $('#current_chat_messages_area').scrollTop(Number.MAX_SAFE_INTEGER);
+        }
+
+        function rollUpChat() {
+            var windowsHeight = $(window).height() * 6 / 100;
+            $('#current_chat').height(windowsHeight);
+            $('#current_chat_input_area').hide();
+        }
+
+        function sentMessage() {
+            var chatId = $('#current_chat_container').attr('data-id');
+            var makerId = $('#user_icon').attr('data-id');
+            var receiverId = $('#current_chat_header b').attr('data-id');
+            var receiverEmail = $('#current_chat_header b').attr('data-email');
+            var textArea = $('#chat_message_text_field');
+            var text = textArea.val();
+            console.log('send message from ' + makerId + " to " + receiverId + " Chat id " + chatId + " Text message: " + text);
+
+            $.ajax({
+                type: 'post',
+                url: '/send_message',
+                data: {
+                    'makerId': makerId,
+                    'receiverId': receiverId,
+                    'receiverEmail': receiverEmail,
+                    'chatId': chatId,
+                    "text": text
+                },
+                dataType: 'text',
+                success: [function (data) {
+                    console.log("message id = " + data);
+                    if (data > 0) {
+                        sendChatRequest(receiverEmail);
+                        var newMessage = $('.chat_output_message:first').clone();
+                        newMessage.removeAttr("style").append(text);
+                        $('#current_chat_messages_area').append(newMessage);
+                        textArea.val(' ');
+                        scrollCurrentChat();
+                    }
+                }]
+            });
+        }
     </script>
-
 </head>
 
 <body>
@@ -69,8 +825,8 @@
         <input id="search_input" type="text">
         <button id="search_button" type="button"><img id="search_icon" th:src="@{/images/main/search.png}"></button>
         <b id="user_name"><a href="/" th:text="${user.name +' '+user.secondName}"></a></b>
-        <div id="user_icon">
-            <img src="user-3.png" class="outer" alt="icon">
+        <div id="user_icon" th:data-id='${user.id}'>
+            <img th:src="@{/images/main/user-3.png}" class="outer" alt="icon">
             <div id="user_setting_menu" class='inner'>
                 <a href="#">Scheduler </a><br>
                 <a href="#">Events </a><br>
@@ -84,201 +840,50 @@
 <div id="main_menu">
     <table>
         <tr>
-            <td><a href="#"><img src="home.png" alt="home"> Main page</a></td>
-            <td><a href="#"><img src="message.png" alt="message"> Messages</a></td>
-            <td><a href="#"><img src="notifications.png" alt="not"> Notifications</a></td>
-            <td><a href="#"><img src="friends.png" alt="friends"> Friends</a></td>
-            <td><a href="#"><img src="more.png" alt="more"> More</a></td>
+            <td><a href="#" onclick="showNews()"> <img th:src="@{/images/main/home.png}" alt="home"> Main page</a></td>
+            <td><a href="#"><img th:src="@{/images/main/message.png}" alt="message"> Messages</a></td>
+            <td><a href="#"><img th:src="@{/images/main/notifications.png}" alt="not"> Notifications</a></td>
+            <td><a href="#"><img th:src="@{/images/main/friends.png}" alt="friends"> Friends</a></td>
+            <td><a href="#"><img th:src="@{/images/main/more.png}" alt="more"> More</a></td>
         </tr>
     </table>
 </div>
 
 <div id="content">
-    <table id="content_table" >
-        <tr id="news_table_template">
-            <td class="news_block">
-                <div class="news_image_container">
-                    <img class="news_image" src="training_1.jpeg" alt="image">
-                </div>
-                <div class="news_details">
-                    <div class="news_name">Some Training Name and main details</div>
-                    <div class="news_details_table_container">
-                        <table>
-                            <tr>
-                                <td class="news_details_icons_block"><img class="news_details_icons" src="view.png"> 25
-                                </td>
-                                <td class="news_details_icons_block"><img class="news_details_icons" src="comment.png">
-                                    25
-                                </td>
-                                <td class="news_details_icons_block"><img class="news_details_icons" src="like.png">155
-                                </td>
-                                <td class="news_details_icons_block"><img class="news_details_icons" src="next.png">
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </td>
-            <td class="news_block">
-                <div class="news_image_container">
-                    <img class="news_image" src="teacher_1.jpg" alt="image">
-                </div>
-                <div class="news_details">
-                    <div class="news_name">Teacher Name and main details</div>
-                    <div class="news_details_table_container">
-                        <table>
-                            <tr>
-                                <td class="news_details_icons_block"><img class="news_details_icons" src="view.png"> 25
-                                </td>
-                                <td class="news_details_icons_block"><img class="news_details_icons" src="comment.png">
-                                    25
-                                </td>
-                                <td class="news_details_icons_block"><img class="news_details_icons" src="like.png">155
-                                </td>
-                                <td class="news_details_icons_block"><img class="news_details_icons" src="next.png">
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </td>
-            <td class="news_block">
-                <div class="news_image_container">
-                    <img class="news_image" src="seminar_1.jpg" alt="image">
-                </div>
-                <div class="news_details">
-                    <div class="news_name">Seminar Name and main details</div>
-                    <div class="news_details_table_container">
-                        <table>
-                            <tr>
-                                <td class="news_details_icons_block"><img class="news_details_icons" src="view.png"> 25
-                                </td>
-                                <td class="news_details_icons_block"><img class="news_details_icons" src="comment.png">
-                                    25
-                                </td>
-                                <td class="news_details_icons_block"><img class="news_details_icons" src="like.png">155
-                                </td>
-                                <td class="news_details_icons_block"><img class="news_details_icons" src="next.png">
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </td>
-            <td class="news_block">
-                <div class="news_image_container">
-                    <img class="news_image" src="teacher_2.png" alt="image">
-                </div>
-                <div class="news_details">
-                    <div class="news_name">Teacher Name and main details</div>
-                    <div class="news_details_table_container">
-                        <table>
-                            <tr>
-                                <td class="news_details_icons_block"><img class="news_details_icons" src="view.png"> 25
-                                </td>
-                                <td class="news_details_icons_block"><img class="news_details_icons" src="comment.png">
-                                    25
-                                </td>
-                                <td class="news_details_icons_block"><img class="news_details_icons" src="like.png">155
-                                </td>
-                                <td class="news_details_icons_block"><img class="news_details_icons" src="next.png">
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </td>
-        </tr>
-    </table>
+
 </div>
 
 <div id="sections">
     <div class='outer' id="section_template">
-        <img src="icon.png" alt="image">
+        <img th:src="@{images/main/icon.png}" alt="image">
         <div class='inner'>
             <h2>First group template</h2>
             <ul>
                 <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-            </ul>
-            <h2>Second group template</h2>
-            <ul>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-            </ul>
-            <h2>Third group template</h2>
-            <ul>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
-                <li><a href="/">Lesson type</a></li>
             </ul>
         </div>
     </div>
     <div class='outer'>
-        <img src="language.png" alt="image">
-        <div class='inner'>
+        <img th:src="@{images/main/language.png}" alt="image">
+        <div class='inner' id="language_section">
             <h2>Language</h2>
             <ul>
                 <li><a href="#">English</a></li>
-                <li><a href="#">Spanish</a></li>
             </ul>
         </div>
     </div>
     <div class='outer'>
-        <img src="health.png" alt="image">
-        <div class='inner'>
+        <img th:src="@{images/main/health.png}" alt="image">
+        <div class='inner' id="health_section">
             <h2>Health group</h2>
             <ul>
                 <li><a href="#">Fitness</a></li>
-                <li><a href="#">Diet</a></li>
-                <li><a href="#">Healthy breathing</a></li>
             </ul>
         </div>
     </div>
     <div class='outer'>
-        <img src="beauty.png" alt="image">
-        <div class='inner'>
+        <img th:src="@{images/main/beauty.png}" alt="image">
+        <div class='inner' id="beauty_section">
             <h2>Beauty </h2>
             <ul>
                 <li><a href="#">Face fitness</a></li>
@@ -286,255 +891,54 @@
         </div>
     </div>
     <div class='outer'>
-        <img src="esoteric.png" alt="image">
-        <div class='inner'>
+        <img th:src="@{images/main/esoteric.png}" alt="image">
+        <div class='inner' id="esoteric_section">
             <h2>Esoteric group</h2>
-            <ul>
-                <li><a href="#">Yoga</a></li>
-            </ul>
         </div>
     </div>
     <div class='outer'>
-        <img src="sport.png" alt="image">
-        <div class='inner'>
+        <img th:src="@{images/main/sport.png}" alt="image">
+        <div class='inner' id="sport_section">
             <h2>Sport</h2>
-            <ul>
-                <li><a href="#">Chess</a></li>
-                <li><a href="#">Poker</a></li>
-            </ul>
         </div>
     </div>
     <div class='outer'>
-        <img src="education.png" alt="image">
-        <div class='inner'>
+        <img th:src="@{images/main/education.png}" alt="image">
+        <div class='inner' id="education_section">
             <h2>Education</h2>
-            <ul>
-                <li><a href="#">Mathematics</a></li>
-                <li><a href="#">Literature</a></li>
-            </ul>
         </div>
     </div>
     <div class='outer'>
-        <img src="art.png" alt="image">
-        <div class='inner'>
+        <img th:src="@{images/main/art.png}" alt="image">
+        <div class='inner' id="art_section">
             <h2>Art</h2>
-            <ul>
-                <li><a href="#">Music</a></li>
-                <li><a href="#">Drawing</a></li>
-                <li><a href="#">Sculpture</a></li>
-            </ul>
         </div>
     </div>
     <div class='outer'>
-        <img src="profession.png" alt="image">
-        <div class='inner'>
+        <img th:src="@{images/main/profession.png}" alt="image">
+        <div class='inner' id="profession_section">
             <h2>Profession</h2>
-            <ul>
-                <li><a href="#">Designer</a></li>
-                <li><a href="#">Sales</a></li>
-            </ul>
         </div>
     </div>
     <div class='outer'>
-        <img src="other.png" alt="image">
-        <div class='inner'>
+        <img th:src="@{images/main/other.png}" alt="image">
+        <div class='inner' id="other_section">
             <h2>Other</h2>
-            <ul>
-                <li><a href="#">Mathematics</a></li>
-                <li><a href="#">Literature</a></li>
-            </ul>
         </div>
     </div>
-
     <div class='outer'>
-        <img src="add_section.png" alt="image">
-        <div class='inner'>
+        <img th:src="@{images/main/add_section.png}" alt="image">
+        <div class='inner' id="add_section_block">
             <h2>Add new Section</h2>
-            <ul>
-                <li><a href="#">Chess</a></li>
-                <li><a href="#">Poker</a></li>
-            </ul>
         </div>
     </div>
 </div>
 <div id="chat">
-    <div id="chat_user_template" class="outer">
-        <div class="inner">
-            <table>
-                <tr>
-                    <td colspan="2"><img src="user-3.png" alt="user"></td>
-                    <td colspan="4">User Name
-                        <hr/>
-                        Teacher
-                    </td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>3</td>
-                    <td>4</td>
-                    <td>5</td>
-                    <td>6</td>
-                </tr>
-            </table>
-        </div>
-        <img src="user-3.png">
-    </div>
-    <div class="outer">
-        <div class="inner">
-            <table>
-                <tr>
-                    <td colspan="2"><img src="user-3.png" alt="user"></td>
-                    <td colspan="4">User Name
-                        <hr/>
-                        Teacher
-                    </td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>3</td>
-                    <td>4</td>
-                    <td>5</td>
-                    <td>6</td>
-                </tr>
-            </table>
-        </div>
-        <img src="user-3.png">
-    </div>
-    <div class="outer">
-        <div class="inner">
-            <table>
-                <tr>
-                    <td colspan="2"><img src="user-3.png" alt="user"></td>
-                    <td colspan="4">User Name
-                        <hr/>
-                        Teacher
-                    </td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>3</td>
-                    <td>4</td>
-                    <td>5</td>
-                    <td>6</td>
-                </tr>
-            </table>
-        </div>
-        <img src="user-3.png">
-    </div>
-    <div class="outer">
-        <div class="inner">
-            <table>
-                <tr>
-                    <td colspan="2"><img src="user-3.png" alt="user"></td>
-                    <td colspan="4">User Name
-                        <hr/>
-                        Teacher
-                    </td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>3</td>
-                    <td>4</td>
-                    <td>5</td>
-                    <td>6</td>
-                </tr>
-            </table>
-        </div>
-        <img src="user-3.png">
-    </div>
-    <div class="outer">
-        <div class="inner">
-            <table>
-                <tr>
-                    <td colspan="2"><img src="user-3.png" alt="user"></td>
-                    <td colspan="4">User Name
-                        <hr/>
-                        Teacher
-                    </td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>3</td>
-                    <td>4</td>
-                    <td>5</td>
-                    <td>6</td>
-                </tr>
-            </table>
-        </div>
-        <img src="user-3.png">
-    </div>
-    <div class="outer">
-        <div class="inner">
-            <table>
-                <tr>
-                    <td colspan="2"><img src="user-3.png" alt="user"></td>
-                    <td colspan="4">User Name
-                        <hr/>
-                        Teacher
-                    </td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>3</td>
-                    <td>4</td>
-                    <td>5</td>
-                    <td>6</td>
-                </tr>
-            </table>
-        </div>
-        <img src="user-3.png">
-    </div>
-    <div class="outer">
-        <div class="inner">
-            <table>
-                <tr>
-                    <td colspan="2"><img src="user-3.png" alt="user"></td>
-                    <td colspan="4">User Name
-                        <hr/>
-                        Teacher
-                    </td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>3</td>
-                    <td>4</td>
-                    <td>5</td>
-                    <td>6</td>
-                </tr>
-            </table>
-        </div>
-        <img src="user-3.png">
-    </div>
-    <div class="outer">
-        <div class="inner">
-            <table>
-                <tr>
-                    <td colspan="2"><img src="user-3.png" alt="user"></td>
-                    <td colspan="4">User Name
-                        <hr/>
-                        Teacher
-                    </td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>3</td>
-                    <td>4</td>
-                    <td>5</td>
-                    <td>6</td>
-                </tr>
-            </table>
-        </div>
-        <img src="user-3.png">
-    </div>
+
 </div>
-<!--</div>-->
+<div id="current_chat">
+
+</div>
+
 </body>
 </html>

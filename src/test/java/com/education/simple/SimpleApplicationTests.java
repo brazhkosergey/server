@@ -40,88 +40,88 @@ public class SimpleApplicationTests {
     private Random random = new Random();
 
     //    @Before
-    public void dropTables() {
-        String dropTablesString = "drop table if exists friends";
-        jdbcTemplate.update(dropTablesString);
-        dropTablesString = "drop table if exists users";
-        jdbcTemplate.update(dropTablesString);
-        dropTablesString = "drop table if exists chats";
-        jdbcTemplate.update(dropTablesString);
-        dropTablesString = "drop table if exists chats_users";
-        jdbcTemplate.update(dropTablesString);
-        dropTablesString = "drop table if exists messages";
-        jdbcTemplate.update(dropTablesString);
-        int show_tables = jdbcTemplate.update("show tables");
-        assert show_tables == 0;
+//    public void dropTables() {
+//        String dropTablesString = "drop table if exists friends";
+//        jdbcTemplate.update(dropTablesString);
+//        dropTablesString = "drop table if exists users";
+//        jdbcTemplate.update(dropTablesString);
+//        dropTablesString = "drop table if exists chats";
+//        jdbcTemplate.update(dropTablesString);
+//        dropTablesString = "drop table if exists chats_users";
+//        jdbcTemplate.update(dropTablesString);
+//        dropTablesString = "drop table if exists messages";
+//        jdbcTemplate.update(dropTablesString);
+//        int show_tables = jdbcTemplate.update("show tables");
+//        assert show_tables == 0;
+//
+//        String createUserTable = "create table users( " +
+//                "id int not null auto_increment," +
+//                "name varchar(50) not null," +
+//                "second_name varchar(50)," +
+//                "email varchar(100) not null," +
+//                "password varchar(25) not null," +
+//                "registration_date bigint not null," +
+//                "primary key(id))";
+//        jdbcTemplate.update(createUserTable);
+//
+//        String createFriendsTable = "create table friends(" +
+//                "user_id int not null," +
+//                "status_friends enum('friend', 'partner') not null," +
+//                "status_learning enum('none','teacher', 'student') not null default 'none'," +
+//                "friend_id int not null references users(id) on delete cascade," +
+//                "approved bit not null default 0," +
+//                "rejected bit not null default 0," +
+//                "primary key (user_id, friend_id)," +
+//                "foreign key (user_id) references users(id) on delete cascade," +
+//                "foreign key (friend_id) references users(id) on delete cascade)";
+//        jdbcTemplate.update(createFriendsTable);
+//
+//        String createChatsTable = "create table chats(" +
+//                "id int not null auto_increment," +
+//                "creator_id int not null references users(id) on delete cascade," +
+//                "chat_name varchar(100)," +
+//                "chat_topic varchar(100)," +
+//                "creating_date int not null," +
+//                "primary key(id))";
+//        jdbcTemplate.update(createChatsTable);
+//
+//        String createChatsUsersTable = "create table chats_users(" +
+//                "chat_id int not null references chats(id) on delete cascade," +
+//                "user_id int not null references users(id) on delete cascade," +
+//                "primary key(chat_id))";
+//        jdbcTemplate.update(createChatsUsersTable);
+//
+//        String createMessagesTable = "create table messages(" +
+//                "id int not null auto_increment," +
+//                "maker_id int not null references users(id) on delete cascade," +
+//                "receiver_id int references users(id)," +
+//                "chat_id int not null references chats(id) on delete cascade," +
+//                "text_message text," +
+//                "time_message bigint," +
+//                "was_read bit not null default 0," +
+//                "primary key(id))";
+//        jdbcTemplate.update(createMessagesTable);
+//
+//        show_tables = jdbcTemplate.update("show tables");
+//
+//        System.out.println("Tables was created " + show_tables);
+//        assert show_tables == 5;
+//    }
 
-        String createUserTable = "create table users( " +
-                "id int not null auto_increment," +
-                "name varchar(50) not null," +
-                "second_name varchar(50)," +
-                "email varchar(100) not null," +
-                "password varchar(25) not null," +
-                "registration_date bigint not null," +
-                "primary key(id))";
-        jdbcTemplate.update(createUserTable);
-
-        String createFriendsTable = "create table friends(" +
-                "user_id int not null," +
-                "status_friends enum('friend', 'partner') not null," +
-                "status_learning enum('none','teacher', 'student') not null default 'none'," +
-                "friend_id int not null references users(id) on delete cascade," +
-                "approved bit not null default 0," +
-                "rejected bit not null default 0," +
-                "primary key (user_id, friend_id)," +
-                "foreign key (user_id) references users(id) on delete cascade," +
-                "foreign key (friend_id) references users(id) on delete cascade)";
-        jdbcTemplate.update(createFriendsTable);
-
-        String createChatsTable = "create table chats(" +
-                "id int not null auto_increment," +
-                "creator_id int not null references users(id) on delete cascade," +
-                "chat_name varchar(100)," +
-                "chat_topic varchar(100)," +
-                "creating_date int not null," +
-                "primary key(id))";
-        jdbcTemplate.update(createChatsTable);
-
-        String createChatsUsersTable = "create table chats_users(" +
-                "chat_id int not null references chats(id) on delete cascade," +
-                "user_id int not null references users(id) on delete cascade," +
-                "primary key(chat_id))";
-        jdbcTemplate.update(createChatsUsersTable);
-
-        String createMessagesTable = "create table messages(" +
-                "id int not null auto_increment," +
-                "maker_id int not null references users(id) on delete cascade," +
-                "receiver_id int references users(id)," +
-                "chat_id int not null references chats(id) on delete cascade," +
-                "text_message text," +
-                "time_message bigint," +
-                "was_read bit not null default 0," +
-                "primary key(id))";
-        jdbcTemplate.update(createMessagesTable);
-
-        show_tables = jdbcTemplate.update("show tables");
-
-        System.out.println("Tables was created " + show_tables);
-        assert show_tables == 5;
-    }
-
-    @Test
-    public void securityTest() {
-        String s = "guest";
-
-        User user = new User();
-        user.setRole(Role.guest);
-        user.setName(s);
-        user.setMailAddress(s);
-        user.setPassword(passwordEncoder.encode(s));
-        userService.saveUser(user);
-
-        String encode = passwordEncoder.encode(s);
-        System.out.println(encode);
-    }
+//    @Test
+//    public void securityTest() {
+//        String s = "guest";
+//        User user = new User();
+//        user.setRole(Role.guest);
+//        user.setName(s + " name");
+//        user.setSecondName(s+" Second Name");
+//        user.setMailAddress(s);
+//        user.setPassword(passwordEncoder.encode(s));
+//        userService.saveUser(user);
+//
+//        String encode = passwordEncoder.encode(s);
+//        System.out.println(encode);
+//    }
 
     @Test
     public void createChatTest() {
@@ -159,7 +159,6 @@ public class SimpleApplicationTests {
 //        chatService.deleteChat(chat.getId());
     }
 
-
     @Test
     public void createMessageTest() {
         Chat chat = chatService.getAllChatsByUser(58).get(0);
@@ -190,10 +189,16 @@ public class SimpleApplicationTests {
 //        chatService.deleteChat(chat.getId());
     }
 
-    //        @Test
+    @Test
     public void createUsersTest() {
+
+        String[] names = {"Иван", "Сергей", "Артем", "Федор", "Дмитрий", "Олег", "Адрей", "Петр", "Владимир", "Денис"};
+        String[] secondNames = {"Бражко", "Слободян", "Семенчук", "Базалевский", "Оверченко", "Евстропов", "Матяш", "Новицкий", "Елисеев", "Бишовец"};
+
         for (int i = 1; i < 31; i++) {
-            User user = new User("User number " + i, "email " + i + "@test.com", "password " + i);
+            User user = new User(names[random.nextInt(9)], i + "@test.com", "Pass123");
+            user.setSecondName(secondNames[random.nextInt(9)]);
+            user.setRole(Role.user);
             userService.saveUser(user);
         }
 
@@ -222,7 +227,7 @@ public class SimpleApplicationTests {
 
         List<User> friendsByUser = userService.getFriendsByUser(user.getId());
         System.out.println("Total friends - " + friendsByUser.size());
-        assert friendsByUser.size() < 10;
+        assert friendsByUser.size() <= 10;
 
         System.out.println("Friends - " + userService.getFriendsByUser(user.getId(), FriendStatus.friend).size());
         assert userService.getFriendsByUser(user.getId(), FriendStatus.friend).size() < 5;
@@ -230,7 +235,6 @@ public class SimpleApplicationTests {
         System.out.println("Partner - " + userService.getFriendsByUser(user.getId(), FriendStatus.partner).size());
         assert userService.getFriendsByUser(user.getId(), FriendStatus.partner).size() < 5;
     }
-
 
 //    @Test
 //    public void addFriendsTest() {

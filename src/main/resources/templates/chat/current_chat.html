@@ -1,0 +1,31 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+
+<!--modelAndView.addObject("chat", chat);-->
+<!--modelAndView.addObject("userId", makerId);-->
+<!--modelAndView.addObject("receiverName", receiverName);-->
+<!--modelAndView.addObject("messages", messageByChatFromDateToDate);-->
+
+<div id="current_chat_container" th:data-id="${chat.id}">
+    <div id="current_chat_header"><img th:src="@{/images/main/user-3.png}"> <b th:text="${receiverName}"
+                                                                               th:data-id="${receiverId}"
+    th:data-email = "${receiverEmail}"></b>
+        <button onclick="hideChat()">&#215</button>
+    </div>
+    <div id="current_chat_messages_area">
+        <div class="chat_input_message" style="display: none"></div>
+        <div class="chat_output_message" style="display: none"></div>
+
+        <th:block th:each="message:${messages}">
+            <div class="chat_input_message" th:if="${message.makerId!=userId}" th:text="${message.textMessage}"></div>
+            <div class="chat_output_message" th:if="${message.makerId==userId}" th:text="${message.textMessage}"></div>
+        </th:block>
+    </div>
+    <div id="current_chat_input_area">
+        <form>
+            <textarea id="chat_message_text_field"></textarea>
+            <input id="chat_message_submit_button" type="button" value="&#x2714" onclick="sentMessage()">
+        </form>
+    </div>
+</div>

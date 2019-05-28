@@ -11,6 +11,6 @@ public interface MessageRepository {
 
 
 
-    List<Message> getNewMessage(Long userId);
-    List<Message> getMessageByChatFromDateToDate(Long chatId,Long dateFrom, Long dateTo);
+    List<Message> getNewMessage(int userId);
+    List<Message> getMessageByChatFromDateToDate(int chatId,Long dateFrom, Long dateTo);
 }

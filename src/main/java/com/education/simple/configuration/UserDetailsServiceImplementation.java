@@ -27,6 +27,10 @@ public class UserDetailsServiceImplementation implements UserDetailsService {
             new UsernameNotFoundException("No user found with username " + s);
             return null;
         } else {
+
+            System.out.println("User " + user.getMailAddress()+" was logging in.");
+
+
             Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
             grantedAuthorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
             return new org.springframework.security.core.userdetails.User(user.getMailAddress(),

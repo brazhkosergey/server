@@ -18,24 +18,13 @@ public class Chat implements Entity {
     private String chatName;
     private String chatTopic;
 
-    private List<Integer> usersId;
-    private List<Integer> messagesId;
-
     public Chat() {
-        usersId = new ArrayList<>();
-        messagesId = new ArrayList<>();
         date = System.currentTimeMillis();
     }
 
     public Chat(int creatorId) {
         this();
         this.creatorId = creatorId;
-        usersId.add(creatorId);
-    }
-
-    public Chat(int creatorId, List<Integer> usersId) {
-        this(creatorId);
-        this.usersId.addAll(usersId);
     }
 
     public Message createMessage(User userFrom, User userTo, String text) {
@@ -52,11 +41,10 @@ public class Chat implements Entity {
     }
 
     public void addUserToChat(User user) {
-        usersId.add(user.getId());
         chatService.addUserToChat(id, user.getId());
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
@@ -80,21 +68,6 @@ public class Chat implements Entity {
         this.creatorId = creatorId;
     }
 
-    public List<Integer> getUsersId() {
-        return usersId;
-    }
-
-    public void setUsersId(List<Integer> usersId) {
-        this.usersId = usersId;
-    }
-
-    public List<Integer> getMessagesId() {
-        return messagesId;
-    }
-
-    public void setMessagesId(List<Integer> messagesId) {
-        this.messagesId = messagesId;
-    }
 
     public String getChatName() {
         return chatName;
@@ -122,13 +95,12 @@ public class Chat implements Entity {
                 getCreatorId() == chat.getCreatorId() &&
                 Objects.equals(chatService, chat.chatService) &&
                 Objects.equals(getChatName(), chat.getChatName()) &&
-                Objects.equals(getChatTopic(), chat.getChatTopic()) &&
-                Objects.equals(getUsersId(), chat.getUsersId()) &&
-                Objects.equals(getMessagesId(), chat.getMessagesId());
+                Objects.equals(getChatTopic(), chat.getChatTopic());
+
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getDate(), getCreatorId(), getUsersId(), getMessagesId());
+        return Objects.hash(getDate(), getCreatorId());
     }
 }
